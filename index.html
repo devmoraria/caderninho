@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1e3a5f">
+<link rel="icon" href="data:,">
+<title>Caderninho</title>
+<meta name="description" content="Gastos, teto do mês e orçamentos, de um jeito simples.">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Caderninho">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topo">
+  <h1>📒 Caderninho</h1>
+  <button class="engrenagem" data-acao="ir" data-tela="ajustes" aria-label="Ajustes e ajuda">⚙️ Ajustes</button>
+</header>
+
+<main>
+
+<!-- ============ TELA: INÍCIO ============ -->
+<section id="tela-inicio" class="tela ativa">
+  <div class="cartao grande">
+    <div class="mes" id="inicio-mes"></div>
+    <div class="rotulo">Você já gastou</div>
+    <div class="valor-grande" id="inicio-gasto">R$ 0,00</div>
+    <div class="suave" id="inicio-teto-linha"></div>
+    <div class="barra" id="barra-geral"><div class="preenchido" id="inicio-barra"></div></div>
+    <div class="mensagem" id="inicio-msg"></div>
+  </div>
+  <button class="btn btn-verde" data-acao="ir" data-tela="anotar">➕ Anotar um gasto</button>
+  <h2>Onde foi o dinheiro</h2>
+  <div class="cartao" id="inicio-cats"></div>
+</section>
+
+<!-- ============ TELA: ANOTAR GASTO ============ -->
+<section id="tela-anotar" class="tela">
+  <h2>Anotar um gasto</h2>
+  <button class="btn btn-azul" data-acao="voz-gasto">🎤 Falar o gasto</button>
+  <p class="suave centro">Exemplo: “cimento duzentos e cinquenta reais trabalho”</p>
+  <div class="entendi" id="entendi" hidden></div>
+  <div class="cartao">
+    <label for="valor">1. Quanto foi? (R$)</label>
+    <input id="valor" inputmode="decimal" autocomplete="off" placeholder="0,00">
+    <label for="desc">2. Com o que? (se quiser)</label>
+    <input id="desc" type="text" autocomplete="off" placeholder="Ex.: cimento, luz, almoço">
+    <label>3. Que tipo de gasto?</label>
+    <div class="cats" id="cats-anotar"></div>
+  </div>
+  <button class="btn btn-verde" data-acao="salvar-gasto">✔ Salvar gasto</button>
+</section>
+
+<!-- ============ TELA: ORÇAMENTO ============ -->
+<section id="tela-orcamento" class="tela">
+  <h2>Orçamento</h2>
+  <label for="cliente">Nome do cliente ou da obra</label>
+  <input id="cliente" type="text" autocomplete="off" placeholder="Ex.: Sr. João - reforma do banheiro">
+
+  <h3>Materiais</h3>
+  <div id="itens"></div>
+  <button class="btn btn-claro" data-acao="add-item">➕ Adicionar outro item</button>
+
+  <div class="cartao">
+    <label for="maoDeObra">Mão de obra (R$)</label>
+    <input id="maoDeObra" inputmode="decimal" autocomplete="off" placeholder="0,00">
+    <label for="margem">Margem de lucro (%)</label>
+    <input id="margem" inputmode="decimal" autocomplete="off" placeholder="Ex.: 10">
+    <p class="suave">Soma esse percentual no total. Ex.: 10 = mais 10%. O cliente não vê essa linha.</p>
+  </div>
+
+  <div class="cartao">
+    <div class="resumo-linha"><span>Materiais</span><strong id="r-material">R$ 0,00</strong></div>
+    <div class="resumo-linha"><span>Mão de obra</span><strong id="r-mao">R$ 0,00</strong></div>
+    <div class="resumo-linha"><span id="r-margem-nome">Margem</span><strong id="r-margem">R$ 0,00</strong></div>
+    <div class="resumo-total"><span>TOTAL</span><span id="r-total">R$ 0,00</span></div>
+  </div>
+
+  <button class="btn btn-verde" data-acao="zap">📲 Mandar pelo WhatsApp</button>
+  <button class="btn btn-claro" data-acao="copiar">📋 Copiar o texto</button>
+  <button class="btn btn-perigo" data-acao="novo-orc">🧹 Começar outro orçamento</button>
+</section>
+
+<!-- ============ TELA: LISTA ============ -->
+<section id="tela-lista" class="tela">
+  <h2>Gastos anotados</h2>
+  <div class="nav-mes">
+    <button class="mini" data-acao="mes" data-delta="-1" aria-label="Mês anterior">◀</button>
+    <strong id="lista-mes"></strong>
+    <button class="mini" data-acao="mes" data-delta="1" aria-label="Próximo mês">▶</button>
+  </div>
+  <div class="cartao grande"><span class="rotulo">Total do mês</span>
+    <div class="valor-grande" id="lista-total" style="font-size:2rem">R$ 0,00</div></div>
+  <div class="cartao" id="lista-itens"></div>
+</section>
+
+<!-- ============ TELA: AJUSTES ============ -->
+<section id="tela-ajustes" class="tela">
+  <button class="btn btn-claro" data-acao="ir" data-tela="inicio">← Voltar</button>
+  <h2>Ajustes</h2>
+  <div class="cartao">
+    <label for="teto" style="margin-top:0">Teto do mês (R$)</label>
+    <p class="suave">É o máximo que você quer gastar no mês. Deixe vazio para não usar teto.</p>
+    <input id="teto" inputmode="decimal" autocomplete="off" placeholder="Ex.: 3000">
+    <h3>Teto por tipo (se quiser)</h3>
+    <div id="ajustes-cats"></div>
+  </div>
+
+  <div class="cartao">
+    <h3 style="margin-top:0">Como funciona</h3>
+    <ol class="ajuda">
+      <li><strong>Anotar:</strong> toque em ➕, fale ou digite o valor, escolha o tipo e aperte Salvar.</li>
+      <li><strong>Cores da barra:</strong> verde = tudo certo. Amarela = já gastou 80% do teto. Vermelha = passou do teto.</li>
+      <li><strong>Orçamento:</strong> escreva cada item com a quantidade e o preço. O aparelho faz a conta e mostra o total.</li>
+      <li><strong>Seus dados</strong> ficam só neste celular. Faça uma cópia de segurança de vez em quando.</li>
+    </ol>
+  </div>
+
+  <div class="cartao">
+    <h3 style="margin-top:0">Cópia de segurança</h3>
+    <button class="btn btn-claro" data-acao="exportar">💾 Guardar uma cópia</button>
+    <label class="btn btn-claro" for="arquivo" style="cursor:pointer">📂 Recuperar uma cópia</label>
+    <input type="file" id="arquivo" accept=".json,application/json" hidden>
+  </div>
+</section>
+
+</main>
+
+<div class="aviso" id="aviso" role="status" aria-live="polite" hidden data-acao="fechar-aviso"></div>
+
+<nav class="menu" aria-label="Menu principal">
+  <button data-acao="ir" data-tela="inicio" aria-current="page"><span class="ic">🏠</span>Início</button>
+  <button data-acao="ir" data-tela="anotar"><span class="ic">➕</span>Anotar</button>
+  <button data-acao="ir" data-tela="orcamento"><span class="ic">🧮</span>Orçamento</button>
+  <button data-acao="ir" data-tela="lista"><span class="ic">📋</span>Gastos</button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
